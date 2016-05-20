@@ -1,6 +1,5 @@
 /* module declaration */
 	var app = angular.module('sueetAdmin', ['ngRoute', 'ngCookies']);
-
 /* redirections */
 	app.config(function ($routeProvider) {
 		$routeProvider
@@ -19,22 +18,52 @@
 			});
 	});
 /* directives */
-	app.directive('dashNav', function () {
-		return {
-			restrict: 'E',
-			templateUrl: 'templates/ui/navbar.html'
-		};
-	});
-
+	/* dashboard directives */
+		app.directive('dashNav', function () {
+			return {
+				restrict: 'E',
+				templateUrl: 'templates/ui/navbar.html'
+			};
+		});
+	/* login directive */
+		app.directive('loginForm', ['$scope', '$http', '$cookies', function ($scope, $http, $cookies) {
+			return {
+				restrict: 'E',
+				templateUrl: 'templates/forms/login-main.html',
+				controller: ['$scope', 'postHttp', '$cookies', function ($scope, postHttp, $cookies) {
+					var info = { user: $scope.user, pass: $scope.pass };
+					$scope.login = function () {
+						$scope.res = postHttp.sendInfo(info, 'login.php');
+						if ($scope.res) console.log('login'); // go to dash
+						else console.log('error'); // don't leave login, raise flag			
+					};
+				}],
+				controllerAs: 'loginFormCtrl'
+			};
+		}]);
 /* controllers */
-	app.controller('dashCtrl', ['$scope', '$http', '$routeParams', function ($scope, $http, $routeParams) {
+	app.controller('dashCtrl', ['$scope', 'getHttp', '$routeParams', function ($scope, getHttp, $routeParams) {
 		var url = 'templates/partials/dash-';
 		$scope.template = url+$routeParams.action+'.html';
-		if (!$routeParams.action) $scope.template = url+'main'+'.html';
+		if (!$routeParams.action) $scope.template = url+'main.html';
 		else {
-			$http({
-				method: 'GET',
-				url: ''
+			$scope.req = getHttp.getInfo($scope.template).then(function successCallback () {}, function errorCallback () {
+				$scope.template = url+'404.html'; // not found, go to dash 404
 			});
+		};
+	}]);
+/* services */
+	app.factory('postHttp', ['$http', function ($http) {
+		return {
+			sendInfo: function (info, url) {
+				return $http.post(url, info);
+			}
+		};
+	}]);
+	app.factory('getHttp', ['$http', function ($http) {
+		return {
+			getInfo: function (url) {
+				return $http.get(url);
+			}
 		};
 	}]);

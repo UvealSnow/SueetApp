@@ -1,0 +1,116 @@
+/* tag Styles */
+	* {
+		margin: 0;
+		padding: 0;
+	}
+	html {
+		font-size: 16px;
+	}
+	body {
+		font-size: 62.5%;
+		font-family: 'Sueet';
+	}
+	a {
+		text-decoration: none;
+		display: inline-block;
+	}
+/* reusable classes */
+	.full-page {
+		width: 100%;
+		height: 100vh;
+		background-color: red;
+	}
+	.vertical {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+	.central-text {
+		width: 90vw;
+		margin: 0 auto;
+		text-align: center;
+		font-family: 'SLight';
+	}
+	.no-overflow {
+		overflow: hidden;
+	}
+	.logo {
+		width: 100%;
+		height: 100%;
+		margin: 0 auto;
+		padding: 1em 0;
+	}
+	.clear:after {
+		content: "";
+	  	display: table;
+	  	clear: both;
+	}
+/* login */
+	.login {
+		background: #00afbf; /* Old browsers */
+		background: -moz-linear-gradient(-45deg, #00afbf 0%, #007a85 100%); /* FF3.6-15 */
+		background: -webkit-linear-gradient(-45deg, #00afbf 0%,#007a85 100%); /* Chrome10-25,Safari5.1-6 */
+		background: linear-gradient(135deg, #00afbf 0%,#007a85 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00afbf', endColorstr='#007a85',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+	}
+	.login-form {
+		background-color: #f6f6f6;
+		padding: 1.5em;
+		-webkit-box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.75);
+		-moz-box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.75);
+		box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.75);
+		border-radius: 10px;
+	}
+	.login-form input {
+		width: 100%;
+		border-top: 0;
+		border-right: 0;
+		border-bottom: 1px solid #c2c2c2;
+		border-left: 0;
+		background-color: transparent;
+		margin: .5em 0;
+		padding-left: .3em;
+		font-family: 'Sueet';
+		height: 1.5em;
+		transition: color 1s;
+	}
+	.login-form input:focus, 
+	.login-form input:active {
+		border-color: #008d97;
+		outline: none;
+	}
+	.login-form button {
+		float: right;
+		font-family: 'Sueet';
+		border: 0;
+		padding: .4em 1em;
+		background-color: #008d97;
+		color: white;
+		margin: .3em 0;
+	}
+	::-webkit-input-placeholder {
+	   color: #b2b3b7;
+	   font-family: 'Sueet';
+	}
+	:-moz-placeholder { /* Firefox 18- */
+	   color: #b2b3b7;  
+	   font-family: 'Sueet';
+	}
+	::-moz-placeholder {  /* Firefox 19+ */
+	   color: #b2b3b7;  
+	   font-family: 'Sueet';
+	}
+	:-ms-input-placeholder {  
+	   color: #b2b3b7;  
+	   font-family: 'Sueet';
+	}
+/* font faces */
+	@font-face {
+		font-family: 'Sueet';
+		src: url('fonts/GothamMedium.otf');
+	}
+	@font-face {
+		font-family: 'SLight';
+		src: url('fonts/GothamThin.otf');
+	}
