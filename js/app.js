@@ -18,15 +18,8 @@
 			});
 	});
 /* directives */
-	/* dashboard directives */
-		app.directive('dashNav', function () {
-			return {
-				restrict: 'E',
-				templateUrl: 'templates/ui/navbar.html'
-			};
-		});
 	/* login directive */
-		app.directive('loginForm', ['$scope', '$http', '$cookies', function ($scope, $http, $cookies) {
+		app.directive('loginForm', function () {
 			return {
 				restrict: 'E',
 				templateUrl: 'templates/forms/login-main.html',
@@ -40,7 +33,34 @@
 				}],
 				controllerAs: 'loginFormCtrl'
 			};
-		}]);
+		});
+	/* dashboard directives */
+		/* dashboard navbar directive */
+			app.directive('dashNav', function () {
+				return {
+					restrict: 'E',
+					templateUrl: 'templates/ui/dash-nav.html',
+					controller: ['$scope', function ($scope) {
+						$scope.active = false;
+						$scope.toggleMenu = function () {
+							$scope.active =!$scope.active;
+						};
+					}],
+					controllerAs: 'navCtrl'
+				};
+			});
+		/* dashboard services menu directive */
+			app.directive('dashMenu', function () {
+				return {
+					restrict: 'E',
+					templateUrl: 'templates/ui/dash-menu.html',
+					controller: ['$scope', '$location', function ($scope, $location) {
+						// $scope.active =
+						console.log($location.path().slice(1));
+					}],
+					controllerAs: 'menuCtrl'
+				};
+			});
 /* controllers */
 	app.controller('dashCtrl', ['$scope', 'getHttp', '$routeParams', function ($scope, getHttp, $routeParams) {
 		var url = 'templates/partials/dash-';

@@ -15,10 +15,13 @@
 		display: inline-block;
 	}
 /* reusable classes */
+	.full-width,
 	.full-page {
 		width: 100%;
+	}
+	.full-height, 
+	.full-page {
 		height: 100vh;
-		background-color: red;
 	}
 	.vertical {
 		position: absolute;
@@ -31,6 +34,20 @@
 		margin: 0 auto;
 		text-align: center;
 		font-family: 'SLight';
+	}
+	.gradient {
+		background: #00afbf; /* Old browsers */
+		background: -moz-linear-gradient(-45deg, #00afbf 0%, #007a85 100%); /* FF3.6-15 */
+		background: -webkit-linear-gradient(-45deg, #00afbf 0%,#007a85 100%); /* Chrome10-25,Safari5.1-6 */
+		background: linear-gradient(135deg, #00afbf 0%,#007a85 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00afbf', endColorstr='#007a85',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+	}
+	.light-gradient {
+		background: #bfd9db; /* Old browsers */
+		background: -moz-linear-gradient(-45deg, #bfd9db 0%, #91d7dc 100%); /* FF3.6-15 */
+		background: -webkit-linear-gradient(-45deg, #bfd9db 0%,#91d7dc 100%); /* Chrome10-25,Safari5.1-6 */
+		background: linear-gradient(135deg, #bfd9db 0%,#91d7dc 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bfd9db', endColorstr='#91d7dc',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 	}
 	.no-overflow {
 		overflow: hidden;
@@ -47,13 +64,6 @@
 	  	clear: both;
 	}
 /* login */
-	.login {
-		background: #00afbf; /* Old browsers */
-		background: -moz-linear-gradient(-45deg, #00afbf 0%, #007a85 100%); /* FF3.6-15 */
-		background: -webkit-linear-gradient(-45deg, #00afbf 0%,#007a85 100%); /* Chrome10-25,Safari5.1-6 */
-		background: linear-gradient(135deg, #00afbf 0%,#007a85 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00afbf', endColorstr='#007a85',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-	}
 	.login-form {
 		background-color: #f6f6f6;
 		padding: 1.5em;
@@ -104,6 +114,37 @@
 	:-ms-input-placeholder {  
 	   color: #b2b3b7;  
 	   font-family: 'Sueet';
+	}
+/* dash navbar */
+	.dash-nav {
+		background-color: #222;
+		height: 5em;
+	}
+	.dash-nav div,
+	.dash-center {
+		display: inline-block;
+		vertical-align: top;
+	}
+	.nav-menu {
+		float: right;
+	}
+	.nav-logo svg {
+		width: inherit;
+		height: 4.2em;
+		float: left;
+		margin: .4em 0;
+	}
+	.nav-menu svg {
+		width: inherit;
+		height: 2.5em;
+		margin: 1.25em;
+		fill: #f2f2f2;
+	}
+/* dash menu */
+	.vertical-nav {
+		display: inline-block;
+		background-color: #0099a7;
+		width: 4.5em;
 	}
 /* font faces */
 	@font-face {
