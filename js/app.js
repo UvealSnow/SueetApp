@@ -55,10 +55,25 @@
 					restrict: 'E',
 					templateUrl: 'templates/ui/dash-menu.html',
 					controller: ['$scope', '$location', function ($scope, $location) {
-						// $scope.active =
-						console.log($location.path().slice(1));
+
 					}],
 					controllerAs: 'menuCtrl'
+				};
+			});
+		/* dashboard multi toolbar */
+			app.directive('dashTools', function () {
+				return {
+					restrict: 'E',
+					templateUrl: 'templates/ui/dash-tools.html',
+					controller: ['$scope', '$location', 'getHttp', function ($scope, $location, getHttp) {
+						var url = $location.path().slice(1).replace('/', '-');
+						console.log(url);
+						getHttp.getInfo('json/' + url + '.json').success(function (d) {
+							$scope.res = d;
+							console.log($scope.res);
+						});
+					}],
+					controllerAs: 'toolsCtrl'
 				};
 			});
 /* controllers */

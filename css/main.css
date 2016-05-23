@@ -119,6 +119,9 @@
 	.dash-nav {
 		background-color: #222;
 		height: 5em;
+		position: absolute;
+		z-index: 1030;
+		top: 0;
 	}
 	.dash-nav div,
 	.dash-center {
@@ -140,11 +143,67 @@
 		margin: 1.25em;
 		fill: #f2f2f2;
 	}
+/* dash hidden menu */
+	.hidden-menu {
+		position: absolute;
+		top: 0
+		left: 0;
+	}
 /* dash menu */
 	.vertical-nav {
+		position: absolute;
+		left: 0;
 		display: inline-block;
 		background-color: #0099a7;
 		width: 4.5em;
+		height: calc(100% - 5em);
+		margin-top: 5em;
+	}
+/* dash center arena */
+	.dash-center {
+		position: absolute;
+		top: 6em;
+		left: 5.5em;
+		width: calc(100% - 6.5em);
+	}
+	.dash-container {
+		background-color: #f9f9f9;
+		border: 1px solid #0099a7;
+		border-radius: .5em;
+		height: 3em;
+		margin-top: 1em;
+	}
+	.dash-search input {
+		border: 1px solid #0099a7;
+		border-radius: 1.5em;
+		padding: .5em 1em;
+		width: calc(100% - 2em);
+	}
+/* dash tool bar */
+	.bubble-container {
+		margin: 1em auto;
+	}
+	.bubble-container * {
+		margin: .2em auto;
+		font-size: .95em;
+	}
+	.add-btn {
+		padding: .5em 1em;
+		background-color: #f9f9f9;
+		border: .1em solid #0099a7;
+		border-radius: 5px;
+		color: #222;
+	}
+	a.action-link {
+		text-decoration: underline;
+		margin: .5em;
+	}
+	select {
+		font-family: 'Sueet';
+		padding: .3em .4em;
+		border: 1px solid #0099a7;
+		border-radius: 1.5em;
+		outline: none;
 	}
 /* font faces */
 	@font-face {

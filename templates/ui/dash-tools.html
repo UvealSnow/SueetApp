@@ -1,0 +1,6 @@
+<div class="bubble-container">
+	<a class="add-btn" href="#/dashboard/add" ng-show="res.add">+ Agregar Propiedad</a>
+	<a class="action-link" href="#/dashboard/map" ng-show="res.map">Ver Mapa</a>
+	<a class="action-link" href="#/dashboard/list" ng-show="res.list">Ver Lista</a>
+	<select ng-show="res.sel"  value="all" ng-options="o.name for o in res.sel track by o.val" ng-model="res.selected"></select>
+</div>
