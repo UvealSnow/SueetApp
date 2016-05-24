@@ -8,7 +8,18 @@
 			})
 			.when('/dashboard/:action?', {
 				templateUrl: 'templates/layout/dashboard.html',
-				controller: 'dashCtrl'
+				controller: 'dashCtrl',
+				resolve: {
+					auth: ['$q', '$window', function ($q, $window) {
+						var info = $window.sessionStorage["info"];
+						if (info) {
+							return $q.when(info);
+						}
+						else {
+							return $q.reject({ log: false });
+						}
+					}]
+				}
 			})
 			.when('/404', {
 				templateUrl: 'templates/layout/404.html'
@@ -23,13 +34,10 @@
 			return {
 				restrict: 'E',
 				templateUrl: 'templates/forms/login-main.html',
-				controller: ['$scope', 'postHttp', '$cookies', function ($scope, postHttp, $cookies) {
-					var info = { user: $scope.user, pass: $scope.pass };
+				controller: ['$scope', 'loginServ', function ($scope, loginServ) {
 					$scope.login = function () {
-						$scope.res = postHttp.sendInfo(info, 'login.php');
-						if ($scope.res) console.log('login'); // go to dash
-						else console.log('error'); // don't leave login, raise flag			
-					};
+						loginServ.login($scope.user, $scope.pass);
+					}
 				}],
 				controllerAs: 'loginFormCtrl'
 			};
@@ -77,7 +85,11 @@
 				};
 			});
 /* controllers */
-	app.controller('dashCtrl', ['$scope', 'getHttp', '$routeParams', function ($scope, getHttp, $routeParams) {
+	app.controller('dashCtrl', ['$scope', 'getHttp', '$routeParams', '$window', '$location', 'logoutServ', function ($scope, getHttp, $routeParams, $window, $location, logoutServ) {
+		function init () {
+			if ($window.sessionStorage['info']) info = JSON.parse($window.sessionStorage['info']);
+		}
+		init();
 		var url = 'templates/partials/dash-';
 		$scope.template = url+$routeParams.action+'.html';
 		if (!$routeParams.action) $scope.template = url+'main.html';
@@ -86,19 +98,64 @@
 				$scope.template = url+'404.html'; // not found, go to dash 404
 			});
 		};
+		$scope.logout = function () { logoutServ.logout(); $location.path('/login'); }
 	}]);
 /* services */
-	app.factory('postHttp', ['$http', function ($http) {
-		return {
-			sendInfo: function (info, url) {
-				return $http.post(url, info);
-			}
-		};
-	}]);
 	app.factory('getHttp', ['$http', function ($http) {
 		return {
 			getInfo: function (url) {
 				return $http.get(url);
 			}
 		};
+	}]);
+	app.factory('loginServ', ['$http', '$q', '$window', '$location', function ($http, $q, $window, $location) {
+		var info;
+		function login(user, pass) {
+			var def = $q.defer();
+			$http.post('php/services/login/index.php', { user: user, pass: pass })
+			.then(function (res) {
+				info = {
+					token: res.data.token,
+					ttl: res.data.ttl,
+					name: res.data.name
+				};
+				$window.sessionStorage["info"] = JSON.stringify(info);
+				if ($window.sessionStorage["info"] != null) $location.path('/dashboard'); // this line is not working properly
+				def.resolve(info);
+				// console.log($window.sessionStorage["info"]);
+			}, function () {
+				der.reject(error);
+			});
+		}
+		return {
+			login: login
+		};
+	}]);
+	app.factory('logoutServ', ['$http', '$window', '$location', '$q', function ($http, $window, $location, $q) {
+		function logout () { 
+			var def = $q.defer();
+			var token = $window.sessionStorage["info"].token;
+			$http.post('php/services/login/logout.php', { token: token })
+			.then(function (res) {
+				$window.sessionStorage["info"] = null;
+				info = null;
+				def.resolve.result(result);
+				$location.path('/login'); // this line is not working properly
+				console.log($window.sessionStorage["info"]);
+			}); // add an error callback, maybe?
+		}
+		return {
+			logout: logout
+		}
+	}]);
+/* root scope redirections */
+	app.run(['$rootScope', '$location', function ($rootScope, $location) {
+		$rootScope.$on('$routeChangeSuccess', function (info) {
+			// console.log(info);
+		});
+		$rootScope.$on('$routeChangeError', function (e, c, p, o) {
+			if (o.auth === false) {
+				$location.path('/login');
+			}
+		});
 	}]);

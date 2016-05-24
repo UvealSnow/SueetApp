@@ -15,10 +15,10 @@
 				<path fill-rule="evenodd" clip-rule="evenodd" fill="#5FB6BB" d="M140.155,239.104c-0.03,0.049-0.06,0.097-0.089,0.146c0.038-0.04,0.076-0.079,0.114-0.119C140.181,239.131,140.155,239.104,140.155,239.104z"/>
 			</g>
 		</svg>
-		<form>
+		<form ng-submit="login();">
 			<input ng-model="user" type="email" name="email" placeholder="Correo electrónico">
 			<input ng-model="pass" type="password" name="pass" placeholder="Contraseña">
-			<button ng-click="login();">Login</button>
+			<button type="submit">Login</button>
 		</form>
 	</div>
 </div>
