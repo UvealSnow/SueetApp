@@ -1,11 +1,7 @@
 {
-	"add":true,
-	"map":true,
+	"add":false,
+	"map":false,
 	"list":false,
-	"sel": [
-		{"name":"Ver todo", "val":"all"},
-		{"name":"Habitacionales", "val":"hab"},
-		{"name":"Comerciales", "val":"com"}
-	],
-	"selected":{"name":"Ver todo", "val":"all"}
+	"sel":false,
+	"selected":false
 }

@@ -15,7 +15,7 @@
 */
 
 /* module declaration */
-	var app = angular.module('sueetAdmin', ['ngRoute', 'ngCookies']);
+	var app = angular.module('sueetAdmin', ['ngRoute', 'ngCookies', 'angular.css.injector']);
 /* redirections */
 	app.config(function ($routeProvider) {
 		$routeProvider
@@ -26,8 +26,8 @@
 				templateUrl: 'templates/layout/dashboard.html',
 				controller: 'dashCtrl',
 				resolve: {
-					auth: ['$q', '$window', function ($q, $window) {
-						var info = $window.sessionStorage["info"];
+					auth: ['$q', '$cookies', function ($q, $cookies) {
+						var info = JSON.parse($cookies.getObject('info'));
 						if (info) {
 							return $q.when(info);
 						}
@@ -39,6 +39,19 @@
 			})
 			.when('/404', {
 				templateUrl: 'templates/layout/404.html'
+			})
+			.when('/', {
+				resolve: {
+					auth: ['$cookies', '$location', function ($cookies, $location) {
+						var info = JSON.parse($cookies.getObject('info'));
+						if (info) {
+							$location.path('/dashboard');
+						}
+						else {
+							$location.path('/login');
+						}
+					}]
+				}
 			})
 			.otherwise({
 				redirectTo: '/404'
@@ -95,6 +108,7 @@
 							$scope.res = d;
 						});
 						$scope.selectValue = function () {
+							
 							if ($scope.res) $cookies.put('dd', $scope.res.selected.val); // set cookie to w/e value was selected
 							else $cookies.put('dd', 'all'); // no cookies set yet, default to show-all
 						};
@@ -103,11 +117,29 @@
 					controllerAs: 'toolsCtrl'
 				};
 			});
+		/* dashboard add form directive */
+			app.directive('addForm', function () {
+				return {
+					restrict: 'E',
+					templateUrl: 'templates/forms/dashboard-add.html',
+					controller: ['$scope', '$http', function ($scope, $http) {
+						$scope.type = null;
+						$scope.addProperty = function () {
+							console.log('property added!');
+						};
+						$scope.changeType = function (t) {
+							$scope.type = t;
+							console.log($scope.type);
+						}
+					}], 
+					controllerAs: 'addCtrl'
+				};
+			});
 /* controllers */
 	/* Main dashboard controller */
-		app.controller('dashCtrl', ['$scope', 'getHttp', '$routeParams', '$window', '$location', 'logoutServ', function ($scope, getHttp, $routeParams, $window, $location, logoutServ) {
+		app.controller('dashCtrl', ['$scope', 'getHttp', '$routeParams', '$cookies', '$location', 'logoutServ', function ($scope, getHttp, $routeParams, $cookies, $location, logoutServ) {
 			function init () {
-				if ($window.sessionStorage['info']) info = JSON.parse($window.sessionStorage['info']);
+				if ($cookies.getObject('info')) $scope.info = JSON.parse($cookies.getObject('info'));
 			}
 			init();
 			var url = 'templates/partials/dash-';
@@ -121,19 +153,20 @@
 			$scope.logout = function () { logoutServ.logout(); $location.path('/login'); }
 		}]);
 	/* dashboard-main controller */	
-		app.controller('mainDashCtrl', ['$scope', '$http', '$window', '$cookies', function ($scope, $http, $window, $cookies) {
+		app.controller('mainDashCtrl', ['$scope', '$http', '$cookies', '$cookies', function ($scope, $http, $cookies, $cookies) {
 			$scope.populate = function () {
-				var user = $window.sessionStorage['info'].id;
-				var view = $cookies.get('dd');
-				/*$http.post('php/services/properties/getProperties.php', { user: user , view: view })
-				.then(function (res) {
+				// console.log('populate');
+				$scope.user = JSON.parse($cookies.getObject('info')).id;
+				$scope.view = $cookies.get('dd');
+				$http({
+					method: 'GET',
+					url: 'php/services/properties/getProperties.php',
+					params: { user: $scope.user, view: $scope.view }
+				}).then (function (res) {
 					$scope.properties = res.data;
-					console.log(res.data);
-				}, function () {
-					// to do: add error callback
-				});*/
+					// console.log($scope.properties);
+				});
 			};	
-			console.log($window.sessionStorage["info"].id);
 			$scope.populate();
 		}]);
 /* services */
@@ -145,7 +178,7 @@
 		};
 	}]);
 	/* login service */
-		app.factory('loginServ', ['$http', '$q', '$window', '$location', function ($http, $q, $window, $location) {
+		app.factory('loginServ', ['$http', '$q', '$cookies', '$location', function ($http, $q, $cookies, $location) {
 			var info;
 			function login(user, pass) {
 				var def = $q.defer();
@@ -157,16 +190,14 @@
 					var info = {
 						token: res.data.token,
 						id: res.data.id, // THIS MUST BE PATCHED ASAP, THE CORRECT WAY TO DO IT SHOULD BE ENCRYPTED
-						ttl: res.data.ttl,
 						name: res.data.name
 					};
-					$window.sessionStorage['info'] = JSON.stringify(info);
+					$cookies.putObject('info', JSON.stringify(info));
 					$location.path('/dashboard');
 					def.resolve(info);
-					console.log(res.data);
 				}, function () {
 					$location.path('/login');
-					der.reject(error);
+					def.reject(error);
 				});
 			}
 			return {
@@ -174,17 +205,15 @@
 			};
 		}]);
 	/* logout service */
-		app.factory('logoutServ', ['$http', '$window', '$location', '$q', function ($http, $window, $location, $q) {
+		app.factory('logoutServ', ['$http', '$cookies', '$location', '$q', function ($http, $cookies, $location, $q) {
 			function logout () { 
 				var def = $q.defer();
-				var token = $window.sessionStorage["info"].token;
+				var token = $cookies.getObject('info').token;
 				$http.post('php/services/login/logout.php', { token: token })
 				.then(function (res) {
-					$window.sessionStorage["info"] = null;
-					info = null;
-					def.resolve.result(result);
+					$cookies.remove('info');
+					def.resolve.result(res);
 					$location.path('/login'); // this line is not working properly
-					console.log($window.sessionStorage["info"]);
 				}); // add an error callback, maybe?
 			}
 			return {

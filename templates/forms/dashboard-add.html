@@ -1,0 +1,54 @@
+<div class="dashboard-form">
+	<form ng-submit="addProperty();">
+		<h3>Agregar Propiedad</h3>
+		<div class="form-part">
+			<p>1. Elegir una opción*</p>
+			<div class="form-links">
+				<a href ng-click="changeType('res');">Residencial</a>
+				<a href ng-click="changeType('com');">Comercial</a>
+			</div>
+		</div>
+		<div class="form-part">
+			<p>2. Nombre de la propiedad*</p>
+			<div class="form-input">
+				<input type="text" placeholder="Nombre de la propiedad" name="property-name" ng-model="name">
+			</div>
+		</div>
+		<div class="form-part">
+			<p>3. Dirección*</p>
+			<div class="form-input">
+				<input type="text" placeholder="Calle" name="property-street" ng-model="street">
+				<input type="text" placeholder="No. Ext" name="property-ext" ng-model="exterior">
+				<input type="text" placeholder="C.P." name="property-zip" ng-model="zip">
+				<input type="text" placeholder="Cuidad" name="property-city" ng-model="city">
+				<input type="text" placeholder="País" name="property-country" ng-model="country">
+			</div>
+		</div>
+		<div class="form-map">
+			map goes here :D
+			:D
+		</div>
+		<div class="form-part">
+			<p>4. Definir áreas (Torres, Secciones, Zonas, etc.)</p>
+			<div class="form-input">
+				<input type="text" placeholder="Dejar en blanco si no aplica" name="property-street" ng-model="areas">
+			</div>
+		</div>
+		<div class="form-part">
+			<p>5. Correo electrónico del Responsable o Gerente Residente</p>
+			<div class="form-input">
+				<input type="text" placeholder="No es necesario, yo soy el Administrador" name="property-street" ng-model="street">
+			</div>
+		</div>
+		<div class="form-part">
+			<p>6. Agrega una imagen de la propiedad*</p>
+			<div class="form-input">
+				<input type="file" placeholder="Elije una imagen para mostrar" name="property-street" ng-model="street">
+			</div>
+			<div class="property-img">
+				<div><!-- sample --></div>
+			</div>
+		</div>
+		<button>Guardar</button>
+	</form>
+</div>

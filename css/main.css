@@ -50,7 +50,7 @@
 		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bfd9db', endColorstr='#91d7dc',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 	}
 	.no-overflow {
-		overflow: hidden;
+		overflow-x: hidden;
 	}
 	.logo {
 		width: 100%;
@@ -155,42 +155,85 @@
 		left: 0;
 		display: inline-block;
 		background-color: #0099a7;
-		width: 4.5em;
+		width: 6em;
 		height: calc(100% - 5em);
 		margin-top: 5em;
+	}
+	.vertical-nav ul {
+		display: table;
+		table-layout: fixed;
+		width: 100%;
+		height: 80%;
+		box-sizing: border-box;
+	}
+	.vertical-nav li {
+		text-align: center;
+		display: table-row;
+	}
+	.vertical-nav svg {
+		width: 3em;
+		height: 3em;
+		text-align: center;
+		margin: .5em 1.9em;
+	}
+	.vertical-nav svg path {
+		fill: #fff;
+	}
+	.vertical-nav a {
+		display: table-cell;
+		vertical-align: middle;
+		width: 100%;
+		font-size: .8em;
+		text-align: center;
+		color: #fff;
 	}
 /* dash center arena */
 	.dash-center {
 		position: absolute;
 		top: 6em;
-		left: 5.5em;
-		width: calc(100% - 6.5em);
+		left: 7em;
+		width: calc(100% - 8.5em);
+		height: calc(100% - 6.5em);
+		overflow-y: scroll;
+		overflow-x: hidden;
 	}
 	.dash-container {
 		background-color: #f9f9f9;
 		border: 1px solid #0099a7;
 		border-radius: .5em;
-		height: 3em;
 		margin-top: 1em;
 	}
 	.dash-search input {
 		border: 1px solid #0099a7;
 		border-radius: 1.5em;
 		padding: .5em 1em;
-		width: calc(100% - 2em);
+		width: calc(100% - 3em);
+	}
+	.dash-container img {
+		height: inherit;
+		max-width: 35%;
+		display: inline-block;
+		vertical-align: middle;
+		padding: .5em;
+	}
+	.dash-container div {
+		vertical-align: middle;
+		display: inline-block;
 	}
 /* dash tool bar */
 	.bubble-container {
 		margin: 1em auto;
+		font-size: .95em;
 	}
 	.bubble-container * {
+		width: calc(100% - 3.5em);
 		margin: .2em auto;
 		font-size: .95em;
 	}
 	.add-btn {
-		padding: .5em 1em;
+		padding: 1em;
 		background-color: #f9f9f9;
-		border: .1em solid #0099a7;
+		border: .05em solid #0099a7;
 		border-radius: 5px;
 		color: #222;
 	}
@@ -199,11 +242,126 @@
 		margin: .5em;
 	}
 	select {
+		width: calc(100% - 1.5em) !important;
 		font-family: 'Sueet';
-		padding: .3em .4em;
+		padding: 1em .5em;
 		border: 1px solid #0099a7;
 		border-radius: 1.5em;
 		outline: none;
+	}
+/* dash-main */
+	.dashboard-menu .dashboard-option {
+		width: calc(50% - .75em);
+	}
+	.dashboard-menu .dashboard-news {
+		width: calc(100% - .75em);
+	}
+	.dashboard-menu .dashboard-news,
+	.dashboard-menu .dashboard-option {
+		position: relative;
+		height: 100px;
+		display: inline-block;
+		background-color: #fff;
+		margin: .3em;
+		vertical-align: top;
+		text-align: center;
+		-webkit-box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.75);
+		-moz-box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.75);
+		box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.75);
+	}
+	.dashboard-news h2,
+	.dashboard-option h2 {
+		font-size: 1.5em;
+		font-family: 'SLight';
+		font-weight: bold;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+/* dash-forms */
+	.dashboard-form {
+		border-radius: 15px;
+		background-color: #fff;
+		border: 1px solid #0099a7;
+		width: calc(100% - .2em);
+		overflow: hidden;
+		position: relative;
+	}
+	.dashboard-form h3 {
+		font-size: 1.5em;
+		text-align: center;
+		color: white;
+		padding: 1em;
+		background-color: #0099a7;
+	}
+	.dashboard-form button {
+		background-color: #0099a7;
+		float: right;
+		font-family: 'SLight';
+		font-size: 1.5em;
+		font-weight: bold;
+		border-radius: 5px;
+		border: 0px;
+		color: white;
+		padding: .5em 1em;
+		margin: 0 2em 1em 0;
+	}
+	.form-links {
+		display: block;
+		text-align: center;
+	}
+	.form-part {
+		margin: 1em 0;
+		display: block;
+	}
+	.form-part * {
+		padding-left: .5em;
+		font-family: 'SLight';
+		font-weight: bold;
+	}
+	.form-part p {
+		font-family: 'Sueet';
+		font-size: 1.1em;
+		margin: .3em .1em;
+	}
+	.form-part input {
+		width: 94%;
+		margin: .3em 0;
+		padding: .6em 0 .2em;
+		border-width: 0 0 2px 0;
+	}
+	.form-part a {
+		border-radius: 10px;
+		font-size: 1.3em;
+		border: 1px solid #0099a7;
+		padding: .5em 1.5em;
+		margin: .3em;
+		color: #a3a3a3;
+	}
+	.form-part ::-webkit-input-placeholder {
+	   color: #a3a3a3;
+	   font-family: 'SLight';
+	   font-weight: bold;
+	   font-size: .9em;
+	}
+	.form-part :-moz-placeholder { /* Firefox 18- */
+	   color: #a3a3a3;
+	   font-family: 'SLight';  
+	   font-weight: bold;
+	   font-size: .9em
+	}
+	.form-part ::-moz-placeholder {  /* Firefox 19+ */
+	   color: #a3a3a3;
+	   font-family: 'SLight';  
+	   font-weight: bold;
+	   font-size: .9em;
+	}
+	.form-part :-ms-input-placeholder {  
+	   color: #a3a3a3;
+	   font-family: 'SLight';  
+	   font-weight: bold;
+	   font-size: .9em;
 	}
 /* font faces */
 	@font-face {
