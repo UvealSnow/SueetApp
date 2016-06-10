@@ -1,11 +1,11 @@
 <div class="dashboard-form">
-	<form ng-submit="addProperty();">
+	<form method="POST" action="php/services/properties/add.php">
 		<h3>Agregar Propiedad</h3>
 		<div class="form-part">
 			<p>1. Elegir una opción*</p>
 			<div class="form-links">
-				<a href ng-click="changeType('res');">Residencial</a>
-				<a href ng-click="changeType('com');">Comercial</a>
+				<a href ng-class="{selected: type=='res'}" ng-click="changeType('res');">Residencial</a>
+				<a href ng-class="{selected: type=='com'}" ng-click="changeType('com');">Comercial</a>
 			</div>
 		</div>
 		<div class="form-part">

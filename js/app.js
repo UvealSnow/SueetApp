@@ -118,23 +118,43 @@
 				};
 			});
 		/* dashboard add form directive */
-			app.directive('addForm', function () {
-				return {
-					restrict: 'E',
-					templateUrl: 'templates/forms/dashboard-add.html',
-					controller: ['$scope', '$http', function ($scope, $http) {
-						$scope.type = null;
-						$scope.addProperty = function () {
-							console.log('property added!');
-						};
-						$scope.changeType = function (t) {
-							$scope.type = t;
-							console.log($scope.type);
-						}
-					}], 
-					controllerAs: 'addCtrl'
-				};
-			});
+			/* add form directive */
+				app.directive('addForm', function () {
+					return {
+						restrict: 'E',
+						templateUrl: 'templates/forms/dashboard-add.html',
+						controller: ['$scope', '$http', function ($scope, $http) {
+							$scope.type = null;
+							$scope.addProperty = function () {
+								console.log('property added!');
+							};
+							$scope.changeType = function (t) {
+								$scope.type = t;
+								console.log($scope.type);
+							}
+						}], 
+						controllerAs: 'addCtrl'
+					};
+				});
+			/* new comm directive */
+				app.directive('newComms', function () {
+					return {
+						restrict: 'E',
+						templateUrl: 'templates/forms/dashboard-new_comm.html',
+						controller: ['$scope', '$http', function ($scope, $http) {
+							$scope.icon = 0;
+							$scope.sendNew = function () {
+								/* to do */
+								$console.log('new comm added'); 
+							}
+							$scope.chooseIcon = function (icon) {
+								$scope.icon = icon;
+								console.log($scope.icon);
+							}
+						}],
+						controllerAs: 'newCommsCtrl'
+					};
+				});
 /* controllers */
 	/* Main dashboard controller */
 		app.controller('dashCtrl', ['$scope', 'getHttp', '$routeParams', '$cookies', '$location', 'logoutServ', function ($scope, getHttp, $routeParams, $cookies, $location, logoutServ) {
@@ -168,6 +188,14 @@
 				});
 			};	
 			$scope.populate();
+		}]);
+	/* dashboard comms controller */
+		app.controller('mainCommCtrl', ['$scope', function ($scope) {
+			$scope.res = [
+				{"id":1, "title":"Lobby", "text":"Mauris vel vehicula eros. Nullam nulla sapien, iaculis eget metus commodo, rutrum ornare libero. Integer quam leo, ullamcorper nec mauris sed, pulvinar molestie leo. Integer dignissim, augue sit amet aliquam elementum, purus libero facilisis orci, vel accumsan ligula ante non est. Vivamus sit amet purus id magna feugiat finibus nec sit amet leo. Etiam fringilla, dolor non condimentum laoreet.", "icon":0},
+				{"id":2, "title":"Mantenimiento", "text":"Maecenas sodales eget orci sed ornare. Ut sed elementum lacus, vel molestie quam. Morbi scelerisque vehicula leo. Ut risus diam, tristique non urna non, fringilla sollicitudin metus. In quis dolor finibus, eleifend dolor vitae, semper sem. Donec sed mi lobortis, ornare elit sit amet, iaculis massa. Phasellus ullamcorper nunc eget suscipit ornare.", "icon":1},
+				{"id":3, "title":"Amenidades", "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vulputate felis augue, ut imperdiet est elementum a. Donec et arcu sagittis, accumsan eros quis, iaculis lacus. Quisque a cursus erat.", "icon":1},
+			]
 		}]);
 /* services */
 	app.factory('getHttp', ['$http', function ($http) {
