@@ -1,1 +1,15 @@
-amenidades
+<div class="dash-search">
+	<input type="text" name="searchbar" ng-bind="search" placeholder="Buscar...">
+</div>
+<dash-tools></dash-tools>
+<a href ng-click="logout();">Logout</a>
+<div ng-controller="mainAmmCtrl">	
+	<div class="dash-container" ng-repeat="r in res">
+		<img src="img/building.jpg">
+		<div class="">
+			<h5>{{r.name}}</h5>
+			<p>{{r.open}} - {{r.close}}</p>
+			<a href>Responsable: {{r.responsible}}</a>
+		</div>	
+	</div>
+</div>	

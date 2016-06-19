@@ -1,1 +1,11 @@
-mensajes
+<div class="dash-search">
+	<input type="text" name="searchbar" ng-bind="search" placeholder="Buscar...">
+</div>
+<dash-tools></dash-tools>
+<div ng-controller="mainMessCtrl">
+	<a ng-href="#/dashboard/show/{{r.id}}" class="comm-container" ng-repeat="r in res">
+		<div><img ng-src="img/icons/{{r.icon}}.png"></div>
+		<h2>{{r.name}} - {{r.number}} ({{r.property}})</h2>
+		<p>{{r.text}}</p>
+	</a>
+</div>

@@ -22,7 +22,7 @@
 			.when('/login', {
 				templateUrl: 'templates/layout/login.html'
 			})
-			.when('/dashboard/:action?', {
+			.when('/dashboard/:model?/:action?/:id?', {
 				templateUrl: 'templates/layout/dashboard.html',
 				controller: 'dashCtrl',
 				resolve: {
@@ -162,16 +162,21 @@
 				if ($cookies.getObject('info')) $scope.info = JSON.parse($cookies.getObject('info'));
 			}
 			init();
-			var url = 'templates/partials/dash-';
-			$scope.template = url+$routeParams.action+'.html';
-			if (!$routeParams.action) $scope.template = url+'main.html';
+			if ($routeParams.action != null && $routeParams.id != null) {
+				$scope.template ='templates/partials/'+$routeParams.model+'-'+$routeParams.action+'.html';
+				$scope.id = $routeParams.id;
+			}
+			else if ($routeParams.model != null) {
+				$scope.template = 'templates/partials/dash-'+$routeParams.model+'.html';
+			} 
+			else if (!$routeParams.model) $scope.template = 'templates/partials/dash-main.html';
 			else {
 				$scope.req = getHttp.getInfo($scope.template).then(function successCallback () {}, function errorCallback () {
 					$scope.template = url+'404.html'; // not found, go to dash 404
 				});
 			};
 			$scope.logout = function () { logoutServ.logout(); $location.path('/login'); }
-		}]);
+		}]);  
 	/* dashboard-main controller */	
 		app.controller('mainDashCtrl', ['$scope', '$http', '$cookies', '$cookies', function ($scope, $http, $cookies, $cookies) {
 			$scope.populate = function () {
@@ -195,7 +200,48 @@
 				{"id":1, "title":"Lobby", "text":"Mauris vel vehicula eros. Nullam nulla sapien, iaculis eget metus commodo, rutrum ornare libero. Integer quam leo, ullamcorper nec mauris sed, pulvinar molestie leo. Integer dignissim, augue sit amet aliquam elementum, purus libero facilisis orci, vel accumsan ligula ante non est. Vivamus sit amet purus id magna feugiat finibus nec sit amet leo. Etiam fringilla, dolor non condimentum laoreet.", "icon":0},
 				{"id":2, "title":"Mantenimiento", "text":"Maecenas sodales eget orci sed ornare. Ut sed elementum lacus, vel molestie quam. Morbi scelerisque vehicula leo. Ut risus diam, tristique non urna non, fringilla sollicitudin metus. In quis dolor finibus, eleifend dolor vitae, semper sem. Donec sed mi lobortis, ornare elit sit amet, iaculis massa. Phasellus ullamcorper nunc eget suscipit ornare.", "icon":1},
 				{"id":3, "title":"Amenidades", "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vulputate felis augue, ut imperdiet est elementum a. Donec et arcu sagittis, accumsan eros quis, iaculis lacus. Quisque a cursus erat.", "icon":1},
-			]
+			];
+		}]);
+		app.controller('mainMessCtrl', ['$scope', function ($scope) {
+			$scope.res = [
+				{"id":1, "name":"José", "number":"T4-506", "property":"Grand Polanco", "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vulputate felis augue, ut imperdiet est elementum a. Donec et arcu sagittis, accumsan eros quis, iaculis lacus. Quisque a cursus erat.", "icon":"user-0"},
+				{"id":2, "name":"Paola", "number":"02", "property":"Anzures #365", "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vulputate felis augue, ut imperdiet est elementum a. Donec et arcu sagittis, accumsan eros quis, iaculis lacus. Quisque a cursus erat.", "icon":"user-1"},
+				{"id":3, "name":"Carlos", "number":"3269", "property":"Carso", "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vulputate felis augue, ut imperdiet est elementum a. Donec et arcu sagittis, accumsan eros quis, iaculis lacus. Quisque a cursus erat.", "icon":"user-2"},
+				{"id":4, "name":"Fabiola", "number":"Administración", "property":"Grand Polanco", "text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vulputate felis augue, ut imperdiet est elementum a. Donec et arcu sagittis, accumsan eros quis, iaculis lacus. Quisque a cursus erat.", "icon":"user-3"},
+			];
+		}]);
+		app.controller('mainAmmCtrl', ['$scope', function ($scope) {
+			$scope.res = [
+				{"id":1, "name":"Gimnasio", "property":"Habitacional 1", "open":"6:00", "close":"23:00", "responsible":"Juan Pérez", "img":"none"},
+				{"id":2, "name":"Alberca", "property":"Habitacional 1", "open":"6:00", "close":"23:00", "responsible":"Juan Pérez", "img":"none"},
+				{"id":3, "name":"Salón de Eventos", "property":"Habitacional 1", "open":"8:00", "close":"14:00", "responsible":"Juan Pérez", "img":"none"},
+				{"id":4, "name":"Cancha de Tenis", "property":"Habitacional 1", "open":"6:00", "close":"23:00", "responsible":"Juan Pérez", "img":"none"}
+			];
+		}]);
+		app.controller('mainDocs', ['$scope', function ($scope) {
+			$scope.properties = [
+				{"id": 1, "name":"Habitacional 1", "folders": 5, "img": "building.jpg"},
+				{"id": 2, "name":"Comercial 1", "folders": 12, "img": "building.jpg"},
+				{"id": 3, "name":"Habitacional 2", "folders": 9, "img": "building.jpg"},
+				{"id": 4, "name":"Habitacional 3", "folders": 4, "img": "building.jpg"},
+				{"id": 5, "name":"Comercial 2", "folders": 16, "img": "building.jpg"}
+			];
+			console.log($scope.properties);
+		}]);
+		/* show folder */
+			app.controller('showFolder', ['$scope', function ($scope) {
+				$scope.docs = [
+					{"id": 1, "name":"Reglamento", "folders": 5, "ext": "doc"},
+					{"id": 2, "name":"Mapa del condominio", "folders": 12, "ext": "ppt"},
+					{"id": 3, "name":"Lista de empleados", "folders": 9, "ext": "xls"},
+					{"id": 4, "name":"Carta abierta sobre reciclaje", "folders": 4, "ext": "png"},
+					{"id": 5, "name":"Convocatoria a junta", "folders": 16, "ext": "pdf"}
+				];
+				console.log($scope.docs);
+			}]);
+	/* messages */
+		app.controller('showMsg', ['$routeParams', '$scope', function ($routeParams, $scope) {
+			$scope.id = $routeParams.id;
 		}]);
 /* services */
 	app.factory('getHttp', ['$http', function ($http) {
