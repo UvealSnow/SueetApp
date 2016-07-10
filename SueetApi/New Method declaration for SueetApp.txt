@@ -1,0 +1,254 @@
+Objects
+	[user] {
+		id
+		age
+		sex
+		email
+		landLine
+		cellPhone
+		firstName
+		lastName
+		lastLogin
+		status
+		[units] {
+			id
+			type
+			name
+			locLag
+			locLat
+			street
+			district
+			city
+			state
+			zip
+			manager
+			description
+			createdAt
+			lastChange
+			status
+			[towers] {
+				id
+				name
+				manager
+				status
+				[flats] (if type = residential) {
+					id
+					number
+					rent
+					status
+					[residents]  {
+						id
+						apptId
+						age
+						sex
+						email
+						landLine
+						cellPhone
+						firstName
+						lastName
+						lastLogin
+						status
+						[requests] {
+							id
+							area
+							status
+							[messages] {
+								id
+								text
+								senderId
+								recieverId
+								sentAt
+								recievedAt
+							}
+						}
+						[cars] {
+							id
+							brand
+							model
+							year
+							color
+							plates
+							createdAt
+							status
+						}
+					}
+				}
+				[amenities] {
+					id
+					name
+					opens
+					closes
+					reservable
+					responsible
+					status
+					[reservations] (if reservable = true) {
+						id
+						reservee 
+						startHour
+						finishHour
+						createdAt
+						status
+					}
+				}
+			}
+			[comms] { /* to do */
+				id
+			}
+			[workers] {
+				id
+				roleId
+				status
+			}
+			[documents] {
+				id
+				name
+				status
+			}
+		}
+		[convs] {
+			id
+			recieverId
+			startedAt
+			[messages] {
+				id
+				text
+				senderId
+				recieverId
+				sentAt
+				recievedAt
+			}
+		}
+		[roles] {
+			id
+			title
+			area
+			[permissions] {
+				dashboard
+				units
+				comms
+				messages
+				requests
+				amenities
+				personnel
+				documents
+			}
+		}
+	}
+
+New Method declaration for SueetApp
+
+get methods
+	|-	getsueet.io/units # done
+	|-	getsueet.io/units/:id # done
+	|-	getsueet.io/units/:id/towers # done
+	|-	getsueet.io/units/:id/towers/:id # done
+	|-	getsueet.io/units/:id/towers/:id/flats
+	|-	getsueet.io/units/:id/towers/:id/flats/:id
+	|-	getsueet.io/units/:id/towers/:id/flats/:id/residents
+	|-	getsueet.io/units/:id/towers/:id/flats/:id/residents/:id
+	|-	getsueet.io/units/:id/towers/:id/amenities
+	|-	getsueet.io/units/:id/towers/:id/amenities/:id
+	|-	getsueet.io/units/:id/towers/:id/amenities/:id/reservations
+	|-	getsueet.io/units/:id/towers/:id/amenities/:id/reservations/:id
+	|-	getsueet.io/units/:id/comms
+	|-	getsueet.io/units/:id/comms/:id
+	|-	getsueet.io/units/:id/workers
+	|-	getsueet.io/units/:id/workers/:id
+	|-	getsueet.io/units/:id/documents
+	|-	getsueet.io/units/:id/documents/:id/files
+	|-	getsueet.io/units/:id/documents/:id/files/:id
+	|-	getsueet.io/comms
+	|-	getsueet.io/comms/:id
+	|-	getsueet.io/comms/:id/messages
+	|-	getsueet.io/comms/:id/messages/:id
+	|-	getsueet.io/roles
+	|-	getsueet.io/roles/:id
+	|-	getsueet.io/roles/:id/permissions
+
+post methods
+
+put methods
+
+delete methods
+
+
+
+Unidades:
+	|-	get /units - returns user.units
+	|-  get	/units/:id - returns the specific user.unit(id)
+	|-  post /units - adds a new unit to user.units
+	|-  put /units/:id - updates user.units(id) 
+	|-  patch /units/:id - partially updates the user.units(id) 
+	|-  delete /units/:id - deletes the user.units(id)
+		\- the deploy of this command will cause the deploy of the following commands prior to the execution of this one
+			|-	delete /requests/:uid - deletes the user.unit(id).requests object
+			|- 	delete /amenities/:uid - deletes the user.unit(uid).amenities object
+			|- 	delete /residents/:uid - deletes the user.unit(uid).residents object
+			|- 	delete /workers/:uid - deletes the user.unit(uid).workers object
+	\-	The first two methods should be able to be filtered with Angular JS
+
+Comunicados:
+	|-	get /comms - returns a FIFO array of all the user.units.comms
+	|-	get /comms/:uid - returns a FIFO ordered array of all the user.unit(uid).comms
+	|-	get /comms/:uid/comm/:cmid - returns the specific user.unit(uid).comms
+	|-  post /comms/ - adds a new user.comm linked to every user.units
+	|-	post /comms/:unit - adds a new user.comms(unit) linked to a single user.unit(id)
+	|-	put /comms/:id - updates user.comms(id)
+	|-	patch /comms/:id - partially updates the user.comms(id) *not sure
+	|-	delete /comms/:id - deletes the user.comms(id)
+	\-	The first two methods should be able to be filtered with Angular JS
+
+Mensajes:
+	|-	get /convs - returns a FIFO array of user.convs or false if empty
+	|-	get /convs/:cid - returns the specific user.conv(cid) or false if not found
+	|-	get /convs/:cid/user/:uid - returns user.conv(cid) or user.conv(uid) or false if not found *not sure
+	|-	post /convs/:cid/user/:uid - adds a new user.conv.msg.new(cid, uid) else adds user.conv.new(uid) and then user.conv.msg.new(cid, uid)
+	|-	put /convs/:cid/ - updates user.conv(cid) to un-link the user from this conversation
+	|-	put /convs/:cid/message/:mid - updates user.conv(cid).msg(mid) to un-link the user from this message
+	\-	The first two methods should be able to be filtered with Angular JS
+
+Solicitudes:
+	|- 	get /requests - returns FIFO array of all the user.units.requests
+	|- 	get /requests/:uid - returns FIFO array of all the user.unit(uid).requests
+	|- 	get /requests/:uid/user/:usid - returns FIFO array of all the user.unit(uid).resident(usid).requests
+	|- 	get /requests/:uid/user/:usid/request/:rid - returns the specific user.unit(uid).resident(usid).request(rid)
+	|- 	post /requests - adds a new entry on resident.requests
+	|- 	put /requests/:rid - updates resident.request(rid)
+	|- 	delete
+	|- 	delete /requests/:rid - deletes the resident.request(rid)
+	|- 	delete /requests/:uid/user/:usid/request/:rid - deletes the user.unit(uid).resident(usid).request(rid)
+	\- 	The first two methods should be able to be filtered with Angular JS
+
+Amenidades:
+	|- 	get /amenities - returns FIFO array of all the user.units.amenities
+	|- 	get /amenities/:uid - returns FIFO array of all the user.unit(id).amenities
+	|- 	get /amenities/:uid/amenity/:aid - retuns the specific user.unit(id).amenity(aid)
+	|- 	post /amenities/:uid - adds a new entry on user.unit(uid).amenities
+	|- 	put /amenities/:uid/amenity/:aid - updates user.unit(uid).amenity(aid)
+	|- 	delete /amenities/:uid - deletes the user.(uid).amenities object
+	|- 	delete /amenities/:uid/amenity/:aid - deletes the user.(uid).amenity(aid)
+	\- 	The first two methods should be able to be filtered with Angular JS
+
+Personal:
+	|- 	get /workers - returns alphabetically arranged array of all the user.units.workers
+	|- 	get /workers/:uid - returns alphabeticallt arranged array of all the user.unit(uid).workers
+	|- 	get /workers/:uid/employee/:eid - returns specific user.unit(uid).worker(eid)
+	|- 	post /workers/:uid/role/:rid - adds a new user.unit(uid).worker(new).role(rid)
+	|- 	put /workers/:uid/employee:/eid - updates user.unit(uid).worker(eid)
+	|- 	delete /workers/:uid - deletes the user.unit(uid).workers
+	|- 	delete /workers/:uid/employee/:eid - deletes the user.unit(uid).worker(eid)
+	\-	The first two methods should be able to be filtered with Angular JS
+
+Residentes:
+	|-	get /residents - returns an array ordered by unit > alphabet of the user.units.residents object
+	|- 	get /residents/:uid - returns an alphabetically arranged array of all the user.unit(uid).residents object
+	|-	get /residents/:uid/number/:n - returns an alphabetically arranged array of all the user.unit(uid).resident(n) object
+	|-	get /residents/:uid/number/:n/id/:rid - returns specific user.unit(uid).resident(n, rid) entity
+	|-	post /residents/:uid/number/:n - adds a new entity user.unit(uid).resident(n) on user.unit(uid).residents object
+	|- 	put /residents/:uid/number/:n/id/:rid - updates the user.unit(uid).resident(n, rid) entity on the user.unit(uid).residents object
+	|-	delete /residents/:ui - deletes the user.unit(uid).residents object
+	|- 	delete /residents/:uid/number/:n - deletes the user.unit(uid).resident(n) object from the user.units.residents object
+		\- the deploy of this command will cause the deploy of the following commands as it's execution strategy WHILE (user.unit(uid).resident(n).count >= 1) DO:
+			|-	delete /residents/:uid/number/:n/id/:rid - deletes the user.unit(uid).resident(n, rid) entity from the user.unit(uid).residents object 
+	|-	delete /residents/:uid/number/:n/id/:rid - deletes the user.unit(uid).resident(n, rid) entity from the user.unit(uid).residents object
+	\-	The first three methods should be able to be filtered with Angular JS
