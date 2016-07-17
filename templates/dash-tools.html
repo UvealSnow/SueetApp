@@ -1,0 +1,9 @@
+<div class="bubble-container">
+	<a class="add-btn" href="#/dashboard/new_comm" ng-show="res.new_comm">Enviar Comunicado</a>
+	<a class="add-btn" href="#/dashboard/add" ng-show="res.add">+ Agregar Propiedad</a>
+	<a class="add-btn" href="#/dashboard/map" ng-show="res.map">Ver Mapa</a>
+	<a class="action-link" href="#/dashboard/list" ng-show="res.list">Ver Lista</a>
+	<select ng-show="res.view" ng-options="o.name for o in res.view_arr track by o.val" ng-model="res.view_sel" ng-change="selectValue();"></select>
+	<select ng-show="res.prop" ng-options="o.name for o in res.prop_arr track by o.val" ng-model="res.prop_sel" ng-change="selectValue();"></select>
+	<select ng-show="res.area" ng-options="o.name for o in res.area_arr track by o.val" ng-model="res.area_sel" ng-change="selectValue();"></select>
+</div>

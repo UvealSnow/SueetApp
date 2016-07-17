@@ -1,0 +1,28 @@
+<div ng-controller="menuCtrl">
+	<div data-contents="black-bar" class="full-width">
+		<img src="img/sueet.svg">
+		<div id="nav-icon4" ng-click="active = !active" ng-class="{'open': active}">
+			<span></span>
+			<span></span>
+			<span></span>
+		</div>
+	</div>
+	<div data-contents="userProfile" ng-class="{'open': active}">
+		
+	</div>
+</div>
+
+<div data-contents="left-menu" class="full-height">
+	<ul>
+		<a ui-sref="app.dashboard.main"><li><img src="img/icons/dashboard.svg" alt="Dashboard" title="Dashboard"><span>Dashboard</span></li></a>
+		<a ui-sref="app.units"><li><img src="img/icons/unit.svg" alt="Unidades" title="Unidades"><span>Unidades</span></li></a>
+		<a ui-sref="app.comms"><li><img src="img/icons/envelope.svg" alt="Comunicación" title="Comunicación"><span>Comunicación</span></li></a>
+		<a ui-sref="app.messages"><li><img src="img/icons/message.svg" alt="Mensajes" title="Mensajes"><span>Mensajes</span></li></a>
+		<a ui-sref="app.requests"><li><img src="img/icons/clock.svg" alt="Solicitudes" title="Solicitudes"><span>Solicitudes</span></li></a>
+		<a ui-sref="app.amenities"><li><img src="img/icons/glass.svg" alt="Amenidades" title="Amenidades"><span>Amenidades</span></li></a>
+		<a ui-sref="app.workers"><li><img src="img/icons/coffee.svg" alt="Personal" title="Personal"><span>Personal</span></li></a>
+		<a ui-sref="app.docs"><li><img src="img/icons/doc.svg" alt="Documentos" title="Documentos"><span>Documentos</span></li></a>
+		<a ui-sref="app.calendar"><li><img src="img/icons/flag.svg" alt="Calendario" title="Calendario"><span>Calendario</span></li></a>
+	</ul>
+</div>
+<ui-view class="arena" />

@@ -1,0 +1,67 @@
+<div form-container>
+	<a ui-sref="app.units" regresar>
+		<img src="img/icons/left.svg" title="Regresar" alt="Regresar">
+		<span>Regresar</span>
+	</a>
+	<form method="POST" action="SueetApi/public/add/units" enctype="multipart/form-data" add-form>
+		<h3>Agregar Propiedad</h3>
+		<div form-part>
+			<p>1. Elegir una opción*</p>
+			<div form-links>
+				<a href ng-class="{active: type}" ng-click="changeType();">Residencial</a>
+				<a href ng-class="{active: !type}" ng-click="changeType();">Comercial</a>
+				<input type="hidden" name="type" value="{{type}}" required>
+				<input type="hidden" name="owner" value="{{token.uid}}" required>
+			</div>
+		</div>
+		<div form-part>
+			<p>2. Nombre de la propiedad*</p>
+			<div class="form-input">
+				<input type="text" placeholder="Nombre de la propiedad" name="name" ng-model="name" required>
+				<textarea placeholder="Descripcón de la propiedad" name="desc"></textarea>
+			</div>
+		</div>
+		<div form-part>
+			<p>3. Dirección*</p>
+			<div class="form-input">
+				<input type="text" placeholder="Calle" name="street" required>
+				<input type="text" placeholder="No. exterior" name="ext" required>
+				<input type="text" placeholder="C.P." name="zip" required>
+				<input type="text" placeholder="Colonia" name="dist" required>
+				<input type="text" placeholder="Cuidad" name="city" required>
+				<input type="text" placeholder="Estado" name="state" required>
+			</div>
+		</div>
+		<div form-part>
+			<p>4. ¿Dónde está tu propiedad? Arrastra y deja caer el pin</p><br>
+			<div my-map=""></div>
+			<input type="hidden" id="lat" name="lat" required>
+			<input type="hidden" id="lng" name="lng" required>
+		</div>
+		<div form-part>
+			<p>5. Define las Torres de tu edificio</p>
+			<div class="form-input" ng-repeat="t in towers track by $index">
+				<br>
+				<p>Torre {{$index + 1}}</p>
+				<input type="text" placeholder="Nombre de la torre" name="tower[{{$index}}][name]">
+				<input type="number" placeholder="Número de departamentos/locales" name="tower[$index][rooms]">
+			</div>
+			<a href ng-click="addTower();" mod-fields>+ Torre</a>
+			<a href ng-click="removeTower();" mod-fields>- Torre</a>
+			<br><br>
+		</div>
+		<div form-part>
+			<p>6. Correo electrónico del Responsable (Eres tú por defecto)</p>
+			<div class="form-input">
+				<input type="text" placeholder="Correo del administrador de la propiedad" name="email" value="{{data[0].email}}" required>
+			</div>
+		</div>
+		<div form-part>
+			<p>7. Agrega una imágen de la propiedad*</p>
+			<div class="form-input">
+				<input type="file" accept="*/image" name="imgs" multiple>
+			</div>
+			<button>Guardar</button>
+		</div>
+	</form>
+</div>
