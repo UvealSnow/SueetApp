@@ -260,7 +260,7 @@ body {
 			width: calc(100% - 10px);
 			background-color: white;
 			display: block;
-			margin: 0 auto;
+			margin: 5px auto;
 			border-radius: 5px;
 			img {
 				width: calc(100% - 16px);
@@ -432,7 +432,8 @@ body {
 			[card] {
 				width: 600px;
 				img {
-					width: calc(30% - 16px);
+					width: 160px;
+					height: 100px;
 				}
 				[info] {
 					display: inline-block;

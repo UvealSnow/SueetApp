@@ -332,7 +332,7 @@
 		$app->post('/add/units', function ($req, $res, $args) { # 17/07/16 - Do the image_upload, validation can wait :v
 
 			$vars = $_POST;
-			$files = $_FILES;
+			$files = $_FILES['imgs'];
 
 			var_dump($vars, $files);
 
@@ -340,61 +340,85 @@
 				# to do 
 
 			# accept image into server 
-				# to do :v
+				$imageFileType = pathinfo($files['name'], PATHINFO_EXTENSION);
+				$targetDir = "../../img/units/";
+				$fileName = md5($vars['owner'].$files['tmp_name']).'.'.$imageFileType;
+				$targetFile = $targetDir.$fileName;
+				$allowed = ['jpg', 'jpeg', 'gif', 'png'];
 
-			# assemble query for new unit
-				$sql = "INSERT INTO `units`(`userId`, `type`, `name`, `locLan`, `locLat`, `street`, `district`, `city`, `state`, `zip`, `description`, `createdAt`, `lastChange`, `status`) VALUES (:uid, :type, :name, :lat, :lng, :street, :dist, :city, :state, :zip, :desc, current_timestamp, current_timestamp, true)";
-				$pdo = $this->db->prepare($sql);
-
-				$pdo->bindParam(':uid', $vars['owner']);
-				$pdo->bindParam(':type', $vars['type']);
-				$pdo->bindParam(':name', $vars['name']);
-				$pdo->bindParam(':lat', $vars['lat']);
-				$pdo->bindParam(':lng', $vars['lng']);
-				$pdo->bindParam(':street', $vars['street'].' #'.$vars['ext']);
-				$pdo->bindParam(':dist', $vars['dist']);
-				$pdo->bindParam(':city', $vars['city']);
-				$pdo->bindParam(':state', $vars['state']);
-				$pdo->bindParam(':zip', $vars['zip']);
-				$pdo->bindParam(':desc', $vars['desc']);
-
-				$pdo->execute();
-
-			# get new unit id as $uid
-				$uid = $pdo->lastInsertId();
-
-			# get admin id as $aid
-				$sql = "SELECT id FROM users WHERE email = :email";
-				$pdo = $this->db->prepare($sql);
-				$pdo->bindParam(':email', $vars['email']);
-				$pdo->execute();
-				$aid = $pdo->fetch(PDO::FETCH_ASSOC);
-				$aid = $aid['id'];
-
-			# create new towers
-				foreach ($var['towers'] as $t) {
-					$sql = "INSERT INTO `towers`(`unitId`, `managerId`, `name`, `status`) VALUES (:uid, :aid, :name, true)";
-					$pdo = $this->db->prepare($sql);
-					$pdo->bindParam(':uid', $uid);
-					$pdo->bindParam(':aid', $aid);
-					$pdo->bindParam(':name', $t['name']);
-					$pdo->execute();
-
-					# get new tower id as $tid
-						$tid = $pdo->lastInsertId();
-
-					# create the new flats with default values for each tower
-						$sql = "INSERT INTO flats (`towerId`, `number`) values ";
-
-						for ($i=1; $i <= $t['rooms']; $i++) { 
-							$sql .= "('$tid', $i), ";
-						}
-						$sql = rtrim($sql, ',');
+				$upload = true;
+				# var_dump($targetFile);
+				if (file_exists($targetFile) || $files['size'] > 500000 || !in_array($imageFileType, $allowed)) $upload = false;
+				if ($upload && move_uploaded_file($files["tmp_name"], $targetFile)) { 
+					
+					# assemble query for new unit
+						$sql = "INSERT INTO `units`(`userId`, `type`, `name`, `locLan`, `locLat`, `street`, `district`, `city`, `state`, `zip`, `description`, `createdAt`, `lastChange`, `img`, `status`) VALUES (:uid, :type, :name, :lat, :lng, :street, :dist, :city, :state, :zip, :desc, current_timestamp, current_timestamp, :img, TRUE)";
 						$pdo = $this->db->prepare($sql);
+
+						$street = $vars['street'].' #'.$vars['ext'];
+
+						
+						if ($vars['type']) $vars['type'] = 'res';
+						else $vars['type'] = 'com';
+
+						$pdo->bindParam(':uid', $vars['owner']);
+						$pdo->bindParam(':type', $vars['type']);
+						$pdo->bindParam(':name', $vars['name']);
+						$pdo->bindParam(':lat', $vars['lat']);
+						$pdo->bindParam(':lng', $vars['lng']);
+						$pdo->bindParam(':street', $street);
+						$pdo->bindParam(':dist', $vars['dist']);
+						$pdo->bindParam(':city', $vars['city']);
+						$pdo->bindParam(':state', $vars['state']);
+						$pdo->bindParam(':zip', $vars['zip']);
+						$pdo->bindParam(':desc', $vars['desc']);
+						$pdo->bindParam(':img', $fileName);
+
 						$pdo->execute();
+
+					# get new unit id as $uid
+						$uid = $this->db->lastInsertId();
+
+					# get admin id as $aid
+						$sql = "SELECT id FROM users WHERE email = :email";
+						$pdo = $this->db->prepare($sql);
+						$pdo->bindParam(':email', $vars['email']);
+						$pdo->execute();
+						$aid = $pdo->fetch(PDO::FETCH_ASSOC);
+						$aid = $aid['id'];
+
+					# create new towers
+						foreach ($vars['tower'] as $t) {
+							$sql = "INSERT INTO `towers`(`unitId`, `managerId`, `name`, `status`) VALUES (:uid, :aid, :name, TRUE)";
+							$pdo = $this->db->prepare($sql);
+							$pdo->bindParam(':uid', $uid);
+							$pdo->bindParam(':aid', $aid);
+							$pdo->bindParam(':name', $t['name']);
+
+							# var_dump($sql, $t['name']);
+							$pdo->execute();
+
+							# get new tower id as $tid
+								$tid = $this->db->lastInsertId();
+
+								
+
+							# create the new flats with default values for each tower
+								$sql = "INSERT INTO flats (`towerId`, `number`) values ";
+
+								for ($i=1; $i <= $t['rooms']; $i++) { 
+									$sql .= "('$tid', $i) , ";
+								}
+								$sql = rtrim($sql, ' ,');
+								$pdo = $this->db->prepare($sql);
+
+								# echo $sql;
+								$pdo->execute();
+
+						}
 				}
 
-				return $res->withStatus(200)->withHeader('Location', '../../');
+				return $res->withStatus(200)->withHeader('Location', '../../../#/admin/units');
 		});
 
 ?>

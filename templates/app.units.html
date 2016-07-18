@@ -7,7 +7,7 @@
 	<a ui-sref="app.unit-map" link>Ver en mapa</a>
 	<div card-container ui-sref="app.dashboard.units">	
 		<div class="dash-container" ng-repeat="p in properties" card>
-			<img src="img/units/building.jpg">
+			<img ng-src="img/units/{{p.img}}">
 			<div info>
 				<h5>{{p.name}}</h5>
 				<p>{{p.street}}</p>
