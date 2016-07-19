@@ -14,10 +14,10 @@ return [
             'path' => __DIR__ . '/../logs/app.log',
         ],
         'db' => [
-            'host' => '127.0.0.1',
+            'host' => 'localhost',
             'user' => 'usnow',
             'pass' => '48kgeia8!',
-            'dbname' => 'sueet',
+            'dbname' => 'Sueet',
         ],
     ],
 ];

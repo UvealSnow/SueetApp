@@ -49,7 +49,7 @@
 		}
 	});
 
-	app.directive('myMap', function() {
+	app.directive('newUnitMap', function() {
 	    // directive link function
 	    var link = function(scope, element, attrs) {
 	        var map, infoWindow;
@@ -97,6 +97,44 @@
 	    };
 	});
 
+	app.directive('seeMap', function() {
+	    // directive link function
+	    var link = function(scope, element, attrs) {
+	        var map, infoWindow;
+	        var markers = [];
+	        
+	        // map config
+	        var mapOptions = {
+	        	key: 'AIzaSyC7QQKsQO1rTuLwz8N48pmVElSvhbTF_o4',
+	            center: new google.maps.LatLng(19.412, -99.174),
+	            zoom: 10,
+	            mapTypeId: google.maps.MapTypeId.ROADMAP,
+	            scrollwheel: true
+	        };
+	        
+	        // init the map
+	        function initMap() {
+	            if (map === void 0) {
+	                map = new google.maps.Map(element[0], mapOptions);
+	            }
+	        }    
+	        
+	        // show the map and place some markers
+	        initMap();
+
+	        myMarker.setMap(map);
+
+	    };
+	    
+	    return {
+	        restrict: 'A',
+	        template: '<div id="gmaps"></div>',
+	        replace: true,
+	        link: link
+	    };
+	});
+
+
 	// app.directive('')
 
 /* controllers */
@@ -109,7 +147,7 @@
 			$cookies.remove('error');
 
 			var info = { user: $scope.user, pass: $scope.pass };
-			var url = 'http://sueetapp.dev/SueetApi/public/login';
+			var url = 'SueetApi/public/login';
 
 			$http.post(url, info).then( function (res) { 
 				$scope.token = res.data.split('.');
