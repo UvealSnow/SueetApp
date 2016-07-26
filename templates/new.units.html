@@ -43,8 +43,8 @@
 			<div class="form-input" ng-repeat="t in towers track by $index">
 				<br>
 				<p>Torre {{$index + 1}}</p>
-				<input type="text" placeholder="Nombre de la torre" name="tower[{{$index}}][name]">
-				<input type="number" placeholder="Número de departamentos/locales" name="tower[{{$index}}][rooms]">
+				<input type="text" placeholder="Nombre de la torre" name="tower[{{$index}}][name]" required>
+				<input type="number" placeholder="Número de departamentos/locales" name="tower[{{$index}}][rooms]" required>
 			</div>
 			<a href ng-click="addTower();" mod-fields>+ Torre</a>
 			<a href ng-click="removeTower();" mod-fields>- Torre</a>

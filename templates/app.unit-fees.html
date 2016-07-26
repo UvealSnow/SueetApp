@@ -1,0 +1,58 @@
+<div arena-container>
+	<div search>
+		<input type="text" ng-model="searchBar" name="searchbar" ng-bind="search" placeholder="Buscar unidades...">
+	</div>
+	<div container>
+		<a ui-sref="app.units" regresar>
+			<img src="img/icons/left.svg" title="Regresar" alt="Regresar">
+			<span>Regresar</span>
+		</a>
+
+		<br>
+
+		<a ui-sref="app.unit-fees({id: units[0].unitId })" add>Ajuste de cuotas</a>
+		<a ui-sref="app.units" link>Ver residentes</a>
+
+		<div table>
+			<h3>Propiedad: {{units[0].unit_name}}, Torres: Todas</h3>
+			<table cellspacing="0" style="width:100%;">
+				<tr>
+					<td class="focused">Tipo de cuota</td>
+					<td class="focused">Mantenimiento</td>
+					<td class="focused" ng-show="!fees[1].name">-</td>
+					<td class="focused" ng-show="fees[1].name">{{fees[1].name}}</td>
+					<td class="focused" ng-show="!fees[2].name">-</td>
+					<td class="focused" ng-show="fees[2].name">{{fees[2].name}}</td>
+					<td class="focused">Saldo</td>
+				</tr>
+				<tr>
+					<td class="focused">Frecuencia</td>
+					<td class="focused">Día {{fees[0].chargeOn}}, Mensual</td>
+					<td class="focused" ng-show="!fees[1].chargeOn">-</td>
+					<td class="focused" ng-show="fees[1].chargeOn">Día {{fees[1].chargeOn}}, Mensual</td>
+					<td class="focused" ng-show="!fees[2].chargeOn">-</td>
+					<td class="focused" ng-show="fees[2].chargeOn">Día {{fees[2].chargeOn}}, Mensual</td>
+					<td class="focused"></td>
+				</tr>
+				<tr>
+					<td class="focused">Totales</td>
+					<td class="focused">{{ fees[0].sum | currency }}</td>
+					<td class="focused">{{ fees[1].sum | currency }}</td>
+					<td class="focused">{{ fees[2].sum | currency }}</td>
+					<td class="focused">{{ total | currency }}</td>
+				</tr>
+				<tr ng-repeat="unit in units | filter: searchBar">
+					<td class="focused">{{ unit.tower_name }} - {{ unit.flat_number }}</td>
+
+					<td>{{ unit.fees[0].cost | currency }}</td>
+					<td ng-show="unit.fees[1]">{{ unit.fees[1].cost | currency }}</td>
+					<td ng-show="!unit.fees[1]">-</td>
+					<td ng-show="unit.fees[2]">{{ unit.fees[2].cost | currency }}</td>
+					<td ng-show="!unit.fees[2]">-</td>
+
+					<td class="focused">{{ unit.flat_debt | currency }}</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>

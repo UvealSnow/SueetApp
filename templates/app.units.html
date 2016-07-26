@@ -1,12 +1,12 @@
 <div arena-container>
 	<div search>
-		<input type="text" name="searchbar" ng-bind="search" placeholder="Buscar unidades...">
+		<input type="text" ng-model="searchBar" name="searchbar" ng-bind="search" placeholder="Buscar unidades...">
 	</div>
 	<dash-tools></dash-tools>
 	<a ui-sref="app.new.units" add>+ Agregar unidad</a>
 	<a ui-sref="app.unit-map" link>Ver en mapa</a>
-	<div card-container ui-sref="app.dashboard.units">	
-		<div class="dash-container" ng-repeat="p in properties" card>
+	<div card-container >	
+		<div class="dash-container" ng-repeat="p in properties | filter: searchBar" ui-sref="app.unit-id({id: p.id})" card>
 			<img ng-src="img/units/{{p.img}}">
 			<div info>
 				<h5>{{p.name}}</h5>

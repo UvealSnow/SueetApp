@@ -118,8 +118,8 @@
 			$db = $this->get('db');
 			$uid = $args['uid'];
 
-			$sql = "SELECT f.id as 'flatId', f.number, u.firstName as 'ownerFirst', u.lastName as 'ownerLast', units.name as 'unitName', t.id as 'towerId', t.name as 'towerName', f.maxResidents, f.status FROM flats as f JOIN users as u ON u.id = f.ownerId JOIN towers as t ON t.id = f.towerId JOIN units ON units.id = t.unitId WHERE units.id = '$uid'";
-			$sql2 = "SELECT f.id as 'flatId', f.number, 'no one' as 'ownerFirst', 'no one' as 'ownerLast', units.name as 'unitName', t.id as 'towerId', t.name as 'towerName', f.maxResidents, f.status FROM flats as f JOIN towers as t ON t.id = f.towerId JOIN units ON units.id = t.unitId WHERE units.id = '$uid' AND f.ownerId IS NULL";
+			$sql = "SELECT f.id as 'flatId', f.number, u.firstName as 'ownerFirst', u.lastName as 'ownerLast', units.id as 'unitId', units.name as 'unitName', t.id as 'towerId', t.name as 'towerName', f.maxResidents, f.status, f.debt FROM flats as f JOIN users as u ON u.id = f.ownerId JOIN towers as t ON t.id = f.towerId JOIN units ON units.id = t.unitId WHERE units.id = '$uid'";
+			$sql2 = "SELECT f.id as 'flatId', f.number, 'no one' as 'ownerFirst', 'no one' as 'ownerLast', units.id as 'unitId', units.name as 'unitName', t.id as 'towerId', t.name as 'towerName', f.maxResidents, f.status, f.debt FROM flats as f JOIN towers as t ON t.id = f.towerId JOIN units ON units.id = t.unitId WHERE units.id = '$uid' AND f.ownerId IS NULL";
 
 			$pre = $db->prepare($sql);
 			$pre->execute();
@@ -133,6 +133,69 @@
 			# var_dump($sql, $sql2, $data);
 
 		   	return $res->withJson($data);
+
+		});
+
+		$app->get('/units/{uid:[0-9]+}/fees', function ($req, $res, $args) { # done
+			
+			$db = $this->get('db');
+			$uid = $args['uid'];
+
+			$sql = "SELECT 
+				u.id as 'unit_id', u.name as 'unit_name',
+				t.id as 'tower_id', t.name as 'tower_name',
+				f.id as 'flat_id', f.number as 'flat_number', f.debt as 'flat_debt'
+				FROM units AS u
+				JOIN towers as t ON t.unitId = u.id
+				JOIN flats as f ON f.towerId = t.id
+				WHERE u.id = '$uid'";
+
+			$pdo = $db->prepare($sql);
+			$pdo->execute();
+			$flats = $pdo->fetchAll();
+
+			$i = 0;
+			$f_id = array();
+			foreach ($flats as $flat) { # get flat ids
+				$sql = "SELECT 	
+					f.id, f.name, f.cost, f.chargeOn, f.period
+					FROM fees as f
+					JOIN fee_flat ON fee_flat.feeId = f.id
+					JOIN flats ON flats.id = fee_flat.flatId
+					WHERE flats.id = ".$flat['flat_id'];
+
+				$pdo = $db->prepare($sql);
+				$pdo->execute();
+				$fees = $pdo->fetchAll();
+
+				$flats[$i]['fees'] = $fees;
+
+				$i++;
+			}
+			
+			# $data = json_encode($data);
+			# var_dump($flats, $f_id);
+		   	return $res->withJson($flats);
+
+		});
+
+		$app->get('/units/{uid:[0-9]+}/unique-fees', function ($req, $res, $args) { # done
+			
+			$db = $this->get('db');
+			$uid = $args['uid'];
+			
+			$sql = "SELECT DISTINCT fees.id, fees.name, fees.chargeOn FROM fees # add fee period
+				JOIN fee_flat as f_f ON f_f.feeId = fees.id
+				JOIN flats as f ON f.id = f_f.flatId
+				JOIN towers as t ON t.id = f.towerId
+				JOIN units as u on u.id = t.unitId
+				WHERE u.id = '$uid'";
+
+			$pdo = $db->prepare($sql);
+			$pdo->execute();
+			$fees = $pdo->fetchAll();
+
+		   	return $res->withJson($fees);
 
 		});
 
@@ -387,6 +450,11 @@
 						$aid = $pdo->fetch(PDO::FETCH_ASSOC);
 						$aid = $aid['id'];
 
+					# create new standard mainteinance fee
+
+						# to do: insert defaults into fees
+						# to do: get fee.id of the new insert and set it into $fid
+
 					# create new towers
 						foreach ($vars['tower'] as $t) {
 							$sql = "INSERT INTO `towers`(`unitId`, `managerId`, `name`, `status`) VALUES (:uid, :aid, :name, TRUE)";
@@ -401,8 +469,6 @@
 							# get new tower id as $tid
 								$tid = $this->db->lastInsertId();
 
-								
-
 							# create the new flats with default values for each tower
 								$sql = "INSERT INTO flats (`towerId`, `number`) values ";
 
@@ -416,6 +482,12 @@
 								$pdo->execute();
 
 						}
+
+					# link fees to flats
+
+						# get a result of all the newly created flats
+						# for each flat $sql .= insert into fee_flat values ($fid, $flat[id]
+
 				}
 
 				return $res->withStatus(200)->withHeader('Location', '../../../#/admin/units');
